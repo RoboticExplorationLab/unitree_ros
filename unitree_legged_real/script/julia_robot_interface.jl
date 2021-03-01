@@ -1,5 +1,5 @@
-""" 
-caution! when including this module in julia, 
+"""
+caution! when including this module in julia,
 and robot = RobotInterface() is called,
 the robot will receive a initialize command and fall down in place
 
@@ -13,7 +13,7 @@ module A1Robot
   using LinearAlgebra
   using ModernRoboticsBook
   # using RobotOS
-  
+
   # @rosimport sensor_msgs.msg: Imu, Joy
   # @rosimport nav_msgs.msg: Odometry
   # @rosimport geometry_msgs.msg: Pose, Twist, QuaternionStamped, WrenchStamped
@@ -62,7 +62,7 @@ module A1Robot
     r::UInt8
     g::UInt8
     b::UInt8
-    function LED() 
+    function LED()
         new(0,0,0)
     end
   end
@@ -88,12 +88,12 @@ module A1Robot
     Kp::Float32
     Kd::Float32
     reserve::SVector{3,UInt32}
-    function MotorCmd() 
+    function MotorCmd()
         new(0,0.0,0.0,0.0,0.0,0.0,zeros(SVector{3,UInt32}))
     end
   end
 
-  # this is not identical to unitree_sdk's datastructure 
+  # this is not identical to unitree_sdk's datastructure
   mutable struct LowState
     # levelFlag::UInt8
     # commVersion::UInt16
@@ -108,7 +108,7 @@ module A1Robot
     # wirelessRemote::SVector{40,UInt8}
     # reserve::UInt32
     # crc::UInt32
-    function LowState() 
+    function LowState()
         # new(0,0,0,0,0,IMU(),@SVector[MotorState() for i in 1:20], zeros(SVector{4,Int16}), zeros(SVector{4,Int16}),0, zeros(SVector{40,UInt8}),0,0)
         new(IMU(), [MotorState() for i in 1:12], zeros(Int16,4))
       end
@@ -125,7 +125,7 @@ module A1Robot
   #   wirelessRemote::SVector{40,UInt8}
   #   reserve::UInt32
   #   crc::UInt32
-  #   function LowCmd() 
+  #   function LowCmd()
   #       new(0,0,0,0,0,@SVector[MotorCmd() for i in 1:20], @SVector[LED() for i in 1:4], zeros(SVector{40,UInt8}),0,0)
   #   end
   # end
@@ -136,8 +136,8 @@ module A1Robot
   const C_RR_ = 2
   const C_RL_ = 3
 
-  const C_FR_0 = 0;     
-  const C_FR_1 = 1;      
+  const C_FR_0 = 0;
+  const C_FR_1 = 1;
   const C_FR_2 = 2;
 
   const C_FL_0 = 3;
@@ -153,14 +153,14 @@ module A1Robot
   const C_RL_2 = 11;
 
 
-  # leg indices for Julia 
+  # leg indices for Julia
   const FR_ = 1
   const FL_ = 2
   const RR_ = 3
   const RL_ = 4
 
-  const FR_0 = 1;     
-  const FR_1 = 2;      
+  const FR_0 = 1;
+  const FR_1 = 2;
   const FR_2 = 3;
 
   const FL_0 = 4;
@@ -175,12 +175,12 @@ module A1Robot
   const RL_1 = 11;
   const RL_2 = 12;
 
-  @wrapmodule("/home/biorobotics/ros_workspaces/unitree_ws/build/unitree_legged_real/lib/libjulia_a1_interface.so")
+  @wrapmodule("/home/chiyen/Dev/a1_ws/build/unitree_legged_real/lib/libjulia_a1_interface.so")
 
   function __init__()
     @initcxx
   end
-  
+
   function getFbkState!(itf::RobotInterface, fbk_state::LowState)
     fbk_state.footForce[1]= getFootForce(itf, C_FR_)
     fbk_state.footForce[2]= getFootForce(itf, C_FL_)
@@ -203,7 +203,7 @@ module A1Robot
   const leg_offset_x = 0.1805
   const leg_offset_y = 0.047
   const thigh_length = 0.2
-  
+
   const hip_mass    =   0.696
   const hip_com_x   =  -0.003311
   const hip_com_y   =   0.000635
@@ -237,7 +237,7 @@ module A1Robot
   const calf_iyz    =  0.0
   const calf_izz    =  0.000032426
 
-  # get the fk of the leg 
+  # get the fk of the leg
   # idx is the index of the leg (we use 0-3)
   # q is the value of joint angles
   function fk(idx::Int, q::Array{Float64,1})
@@ -268,11 +268,11 @@ module A1Robot
     return p
   end
 
-  # the leg jacobian. 
+  # the leg jacobian.
   function J(idx::Int, q::Array{Float64,1})
     # these two variables indicates the quadrant of the leg
-    # when I derive J in matlab I have right leg define this d as possitive 
-    d = thigh_offset 
+    # when I derive J in matlab I have right leg define this d as possitive
+    d = thigh_offset
     if idx == C_FR_
       front_hind = 1
       mirror = -1
@@ -303,11 +303,11 @@ module A1Robot
     return J
   end
 
-  # the derivative of the leg jacobian. 
+  # the derivative of the leg jacobian.
   function dJ(idx::Int, q::Array{Float64,1}, dq::Array{Float64,1})
     # these two variables indicates the quadrant of the leg
-    # when I derive J in matlab I have right leg define this d as possitive 
-    d = thigh_offset 
+    # when I derive J in matlab I have right leg define this d as possitive
+    d = thigh_offset
     if idx == C_FR_
       front_hind = 1
       mirror = -1
@@ -337,7 +337,7 @@ module A1Robot
     dJ[3,2] = l*cos(q1)*(cos(q2 + q3)*(dq2 + dq3) + dq2*cos(q2)) - dq1*l*sin(q1)*(sin(q2 + q3) + sin(q2))
     dJ[3,3] = l*cos(q2 + q3)*cos(q1)*(dq2 + dq3) - dq1*l*sin(q2 + q3)*sin(q1)
     return dJ
-  end  
+  end
 
   # get twist list (Slist), home configuration list (Mlist), inertia list (Glist)
   # these definitions are from "ModernRobotics"
@@ -417,7 +417,7 @@ module A1Robot
     M12 = inv(M1)*M2;
     M23 = inv(M2)*M3;
     M34 = inv(M3)*M4;
-    
+
     return [M01, M12, M23, M34]
   end
 
@@ -425,7 +425,7 @@ module A1Robot
     I1 = [hip_ixx        hip_ixy        hip_ixz;
       hip_ixy        hip_iyy        hip_iyz;
       hip_ixz        hip_iyz        hip_izz ];
-        
+
     G1 = [I1 zeros(3,3);
       zeros(3,3) diagm([hip_mass, hip_mass, hip_mass])];
 
@@ -472,15 +472,15 @@ module A1Robot
   end
 
   """ functions to control the robot """
-  # Cartesian space torque control 
+  # Cartesian space torque control
   # input reference position, velocity, acc (probably from a trajectory)
   # input feedback joint angle, joint angular velocity
   # input desired foot force (in body frame)
   # output desired leg joint torque
-  function torque_ctrl(leg_ID::Int, 
+  function torque_ctrl(leg_ID::Int,
       ref_p::Vector{Float64}, ref_v::Vector{Float64}, ref_a::Vector{Float64},
       q::Vector{Float64}, dq::Vector{Float64}, F::Vector{Float64})::Vector{Float64}
-      
+
       Jb = J(leg_ID, q)
       dJ = dJ(leg_ID, q, dq)
       p = fk(leg_ID,q)
@@ -493,7 +493,7 @@ module A1Robot
       Kd = diagm([15;15;15])
 
       tau = Jb'*(Kp*(ref_p-p)+Kd*(ref_v-v)) + Jb'*inv(Jb)'*M*inv(Jb)*(ref_a-dJ*dq) + c + grav;
-      # add the foot force 
+      # add the foot force
       tau = tau + Jb'*F
       return tau
   end
@@ -511,8 +511,8 @@ module A1Robot
   # joy_data_buttons = zeros(Int16,11)
   # body_position = zeros(3)
   # body_orientation = zeros(4)
-  # body_velocity  = zeros(3) 
-  
+  # body_velocity  = zeros(3)
+
 
   # function init_fbk()
   #   fbk_state = LowState()
@@ -520,7 +520,7 @@ module A1Robot
   #   joy_data_buttons = zeros(Int16,11)
   #   body_position = zeros(3)
   #   body_orientation = zeros(4)
-  #   body_velocity  = zeros(3) 
+  #   body_velocity  = zeros(3)
   #   for i=1:4
   #     fbk_state.footForce[i] = 0
   #   end
@@ -541,7 +541,7 @@ end # end of the module
 # @show doc()
 # doc()
 # b = RobotInterface()
-# must intialize the robot 
+# must intialize the robot
 # InitSend(b)
 # fbk_state = LowState()
 # @show d = ReceiveObservation(b)

@@ -65,9 +65,9 @@ add_dependencies(lcm_server_3_1 ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXP
 
 
 # add Julia interface
-set(JlCxx_DIR /home/biorobotics/Documents/julia_program_files/libcxxwrap-julia/build)
-set(Julia_PREFIX /home/biorobotics/Documents/julia_program_files/julia-1.5.3) 
-set(Julia_EXECUTABLE /home/biorobotics/Documents/julia_program_files/julia-1.5.3/bin/julia)
+set(JlCxx_DIR $ENV{HOME}/Dev/libcxxwrap-julia-build)
+set(Julia_PREFIX /opt/julia-1.5.3) 
+set(Julia_EXECUTABLE /opt/julia-1.5.3/bin/julia)
 find_package(JlCxx)
 get_target_property(JlCxx_location JlCxx::cxxwrap_julia LOCATION)
 get_filename_component(JlCxx_location ${JlCxx_location} DIRECTORY)

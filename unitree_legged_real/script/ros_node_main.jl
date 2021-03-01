@@ -37,7 +37,7 @@ function sim_low_state_callback(msg::unitree_legged_msgs.msg.LowState, state::A1
     end
 end
 
-# foot force callback 
+# foot force callback
 function sim_foot_force_FR_callback(msg::geometry_msgs.msg.WrenchStamped, state::A1Robot.LowState)
     state.footForce[1] = convert(Int16, floor(msg.wrench.force.z*10))
 end
@@ -78,46 +78,46 @@ function main()
         fbk_state.motorState[i].q = 0.01
         fbk_state.motorState[i].dq = 0.0
     end
-    sim_low_state_sub = Subscriber{unitree_legged_msgs.msg.LowState}("a1_gazebo/lowState/state", 
+    sim_low_state_sub = Subscriber{unitree_legged_msgs.msg.LowState}("a1_gazebo/lowState/state",
         sim_low_state_callback, (fbk_state,), queue_size=1)
-    # sim_joint_FR_hip_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FR_hip_controller/state", 
+    # sim_joint_FR_hip_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FR_hip_controller/state",
     #     sim_joint_FR_hip_callback, (fbk_state.motorState[1],), queue_size=1)
-    # sim_joint_FR_thigh_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FR_thigh_controller/state", 
+    # sim_joint_FR_thigh_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FR_thigh_controller/state",
     #     sim_joint_FR_thigh_callback, (fbk_state.motorState[2],), queue_size=1)
-    # sim_joint_FR_calf_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FR_calf_controller/state", 
-    #     sim_joint_FR_calf_callback, (fbk_state.motorState[3],), queue_size=1) 
-    # sim_joint_FL_hip_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FL_hip_controller/state", 
+    # sim_joint_FR_calf_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FR_calf_controller/state",
+    #     sim_joint_FR_calf_callback, (fbk_state.motorState[3],), queue_size=1)
+    # sim_joint_FL_hip_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FL_hip_controller/state",
     #     sim_joint_FL_hip_callback, (fbk_state.motorState[4],), queue_size=1)
-    # sim_joint_FL_thigh_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FL_thigh_controller/state", 
+    # sim_joint_FL_thigh_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FL_thigh_controller/state",
     #     sim_joint_FL_thigh_callback, (fbk_state.motorState[5],), queue_size=1)
-    # sim_joint_FL_calf_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FL_calf_controller/state", 
-    #     sim_joint_FL_calf_callback, (fbk_state.motorState[6],), queue_size=1) 
+    # sim_joint_FL_calf_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/FL_calf_controller/state",
+    #     sim_joint_FL_calf_callback, (fbk_state.motorState[6],), queue_size=1)
 
-    # sim_joint_RR_hip_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RR_hip_controller/state", 
+    # sim_joint_RR_hip_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RR_hip_controller/state",
     #     sim_joint_RR_hip_callback, (fbk_state.motorState[7],), queue_size=1)
-    # sim_joint_RR_thigh_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RR_thigh_controller/state", 
+    # sim_joint_RR_thigh_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RR_thigh_controller/state",
     #     sim_joint_RR_thigh_callback, (fbk_state.motorState[8],), queue_size=1)
-    # sim_joint_RR_calf_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RR_calf_controller/state", 
-    #     sim_joint_RR_calf_callback, (fbk_state.motorState[9],), queue_size=1) 
-    # sim_joint_RL_hip_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RL_hip_controller/state", 
+    # sim_joint_RR_calf_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RR_calf_controller/state",
+    #     sim_joint_RR_calf_callback, (fbk_state.motorState[9],), queue_size=1)
+    # sim_joint_RL_hip_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RL_hip_controller/state",
     #     sim_joint_RL_hip_callback, (fbk_state.motorState[10],), queue_size=1)
-    # sim_joint_RL_thigh_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RL_thigh_controller/state", 
+    # sim_joint_RL_thigh_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RL_thigh_controller/state",
     #     sim_joint_RL_thigh_callback, (fbk_state.motorState[11],), queue_size=1)
-    # sim_joint_RL_calf_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RL_calf_controller/state", 
-    #     sim_joint_RL_calf_callback, (fbk_state.motorState[12],), queue_size=1) 
+    # sim_joint_RL_calf_sub = Subscriber{unitree_legged_msgs.msg.MotorState}("a1_gazebo/RL_calf_controller/state",
+    #     sim_joint_RL_calf_callback, (fbk_state.motorState[12],), queue_size=1)
 
     # foot force sub
-    sim_footforceFR_sub = Subscriber{geometry_msgs.msg.WrenchStamped}("visual/FR_foot_contact/the_force", 
+    sim_footforceFR_sub = Subscriber{geometry_msgs.msg.WrenchStamped}("visual/FR_foot_contact/the_force",
         sim_foot_force_FR_callback, (fbk_state,), queue_size=1)
-    sim_footforceFL_sub = Subscriber{geometry_msgs.msg.WrenchStamped}("visual/FL_foot_contact/the_force", 
+    sim_footforceFL_sub = Subscriber{geometry_msgs.msg.WrenchStamped}("visual/FL_foot_contact/the_force",
         sim_foot_force_FL_callback, (fbk_state,), queue_size=1)
-    sim_footforceRR_sub = Subscriber{geometry_msgs.msg.WrenchStamped}("visual/RR_foot_contact/the_force", 
+    sim_footforceRR_sub = Subscriber{geometry_msgs.msg.WrenchStamped}("visual/RR_foot_contact/the_force",
         sim_foot_force_RR_callback, (fbk_state,), queue_size=1)
-    sim_footforceRL_sub = Subscriber{geometry_msgs.msg.WrenchStamped}("visual/RL_foot_contact/the_force", 
+    sim_footforceRL_sub = Subscriber{geometry_msgs.msg.WrenchStamped}("visual/RL_foot_contact/the_force",
         sim_foot_force_RL_callback, (fbk_state,), queue_size=1)
 
     # IMU sub
-    sim_imu_sub = Subscriber{sensor_msgs.msg.Imu}("trunk_imu", sim_imu_callback, (fbk_state,), queue_size=1)   
+    sim_imu_sub = Subscriber{sensor_msgs.msg.Imu}("trunk_imu", sim_imu_callback, (fbk_state,), queue_size=1)
 
     """ send sim data data and pub"""
     simcmd_list = [unitree_legged_msgs.msg.MotorCmd() for i=1:12]
@@ -146,7 +146,7 @@ function main()
     push!(sim_pub_list,pub)
     pub = Publisher{unitree_legged_msgs.msg.MotorCmd}("a1_gazebo/RL_calf_controller/command", queue_size=1)
     push!(sim_pub_list,pub)
-    
+
     """ start control loop """
     try
         loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
@@ -180,7 +180,7 @@ end
 function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
     ctrl_hz = 250.0
     ctrl_dt = 1.0/ctrl_hz
-    loop_rate = Rate(ctrl_hz)   
+    loop_rate = Rate(ctrl_hz)
     q_list = zeros(3,4)  # FR, FL, RR, RL
     dq_list = zeros(3,4)  # FR, FL, RR, RL
 
@@ -189,11 +189,11 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
     ref_base_position = [base_state.position[1];
                          base_state.position[2];
                          base_state.position[3]];
-     
-            
+
+
     standup_down_z_vel = 0;
-    control_state = 0      # 0 is standing 
-    # foot contact state  
+    control_state = 0      # 0 is standing
+    # foot contact state
     #TODO: add a scheduling
     foot_contact = [1,1,1,1]
 
@@ -203,6 +203,10 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
     F_prev = vcat(normal_load,normal_load,normal_load,normal_load)
     # constants for QP
     miu = 0.5
+
+    # Cx = d
+    # x force
+    # C physical meaning.
     Cb = @SMatrix [ 0    0    -1;
                     1    0  -miu;
                    -1    0  -miu;
@@ -212,28 +216,38 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
     z3 = @SMatrix zeros(5,3)
     z33 = @SMatrix zeros(3,3)
     I3 = SMatrix{3,3}(1I)
+
+    # Russ tedrake, friction cone
+
+
     C = [Cb z3 z3 z3;
         z3 Cb z3 z3;
         z3 z3 Cb z3;
         z3 z3 z3 Cb]
-    C = SMatrix{20,12}(C)  
-    # the three parameters of the QP, different F components have different value    
+    C = SMatrix{20,12}(C)
+    # the three parameters of the QP, different F components have different value
     alpha_x = alpha_y = alpha_z = 0.5
-    beta_x = beta_y = beta_z = 0.05         
-    s_vec = [1,1,1,30,30,30]  
+    beta_x = beta_y = beta_z = 0.05
+    s_vec = [1,1,1,30,30,30]
     S = diagm(s_vec)
-    S = SMatrix{6,6}(S)  
-    alpha_vec = [alpha_x,alpha_y,alpha_z]  
+    S = SMatrix{6,6}(S)
+    alpha_vec = [alpha_x,alpha_y,alpha_z]
     alpha_mtx = diagm(vcat(alpha_vec,alpha_vec,alpha_vec,alpha_vec))
     alpha_mtx = SMatrix{12,12}(alpha_mtx)
-    beta_vec = [beta_x,beta_y,beta_z]  
-    beta_mtx = diagm(vcat(beta_vec,beta_vec,beta_vec,beta_vec))   
+    beta_vec = [beta_x,beta_y,beta_z]
+    beta_mtx = diagm(vcat(beta_vec,beta_vec,beta_vec,beta_vec))
     beta_mtx = SMatrix{12,12}(beta_mtx)
 
     """ variables used in the loop """
-    # frame definition 
+    # frame definition
     # e - world frame
-    # b - body frame 
+    # b - body frame
+
+    # R_eb, q_eb
+    # pe = q_eb * pb
+    # a mathematical intro to manipulation
+    # modern robotics
+
     p_eb = zeros(3)
     v_eb = zeros(3)
     q_eb = UnitQuaternion(1.0,0.0,0.0,0.0)
@@ -246,17 +260,18 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
     debug_pub2 = Publisher{geometry_msgs.msg.Point}("rosjl/debug/point2", queue_size=1)
     debug_point2 = geometry_msgs.msg.Point()
 
+    # main ros loop
     while ! is_shutdown()
 
         """ get feedback """
         # get joint angles
         for i=1:4
-            leg_ID = i-1 # for leg ID we all use C style 
+            leg_ID = i-1 # for leg ID we all use C style
             for j=1:3
                 q_list[j,i] = convert(Float64, fbk_state.motorState[leg_ID*3+j].q)
                 dq_list[j,i] = convert(Float64, fbk_state.motorState[leg_ID*3+j].dq)
             end
-        end  
+        end
         # get current base states
         for i=1:3
             p_eb[i] = base_state.position[i]
@@ -286,14 +301,14 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
 
         """ different control state """
         if control_state == 0
-            # control state 0, the standup state 
+            # control state 0, the standup state
             # use joy stick axes 5 to control
             joy_input = convert(Float64, joy_data.axes[2])
             if (joy_input>0.2 || joy_input<-0.2)
                 standup_down_z_vel = 0.2*joy_input
             else
                 standup_down_z_vel = 0
-            end            
+            end
             # modify reference p and reference v
             # for i=1:4
             #     ref_p_list[3,i] += ctrl_dt*standup_down_z_vel
@@ -304,7 +319,7 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
             #     end
             #     ref_v_list[3,i] = standup_down_z_vel
             # end
-            
+
             ref_base_position[3] += ctrl_dt*standup_down_z_vel
             if ref_base_position[3] < 0.05
                 ref_base_position[3] = 0.05
@@ -317,9 +332,9 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
             tgt_pitch = joy_data.axes[5]*30/180*pi
 
             q_tilt, q_torsion = quat_decompose_tilt_torsion(q_eb)
-            q_tgt = q_torsion # TODO: get current yaw 
-            # q_tgt = UnitQuaternion(1.0,0.0,0.0,0.0) # TODO: get current yaw 
-            q_tgt = UnitQuaternion(RotZYX(tgt_yaw, tgt_roll, tgt_pitch)) # TODO: get current yaw 
+            q_tgt = q_torsion # TODO: get current yaw
+            # q_tgt = UnitQuaternion(1.0,0.0,0.0,0.0) # TODO: get current yaw
+            q_tgt = UnitQuaternion(RotZYX(tgt_yaw, tgt_roll, tgt_pitch)) # TODO: get current yaw
             q_err = q_tgt*conj(q_eb)
 
             # # curr_base_yaw, curr_base_roll, curr_base_pitch = quat_to_euler(q_eb)
@@ -331,7 +346,12 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
 
             w_b = fbk_state.imu.gyroscope
             w_e = q_eb*w_b
-            # println("current_w")
+            # println("current_w")        A1Robot.setCmdMotorTau(robot, leg_ID*3, Float32(tau[1]))
+        A1Robot.setCmdMotorTau(robot, leg_ID*3+1, Float32(tau[2]))
+        A1Robot.setCmdMotorTau(robot, leg_ID*3+2, Float32(tau[3]))
+
+        A1Robot.SendCommand(robot)
+
             # println(current_w)
 
             Kp = diagm([120;220;80])
@@ -367,7 +387,7 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
             # show(stdout, "text/plain", q_list)
             for i=1:4
                 leg_ID = i - 1
-                
+
                 p = A1Robot.fk(leg_ID, q_list[:,i])
                 p = convert(SVector{3},p)
                 # println("p")
@@ -403,7 +423,7 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
                 end
             end
 
-            # QP 
+            # QP
             # F'(A'*S*A+alpha+beta)F - (A'Sb+2 beta F_rev)'F
             # Cx<=0
             # Dx = 0
@@ -419,7 +439,7 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
             res = OSQP.solve!(model)
 
             F = reshape(res.x,3,4)
-            
+
             # show(stdout, "text/plain", F)
             # println("---")
 
@@ -460,7 +480,7 @@ function loop(fbk_state, joy_data, base_state, simcmd_list, sim_pub_list)
 
         sim_SendCommand(simcmd_list, sim_pub_list)
         rossleep(loop_rate)
-        
+
     end
 end
 
