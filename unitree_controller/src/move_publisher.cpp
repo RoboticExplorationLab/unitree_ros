@@ -7,6 +7,30 @@
 // #include <std_msgs/Float64.h>
 #include <math.h>
 #include <iostream>
+#include <sensor_msgs/Joy.h>
+
+float roll_ang = 0.0;
+float pitch_ang = 0.0;
+float yaw_ang = 0.0;
+float bod_height_ros = 0.0;//1
+float bod_height_ros_max = 0.5;
+float bod_height_ros_min = -0.4;
+
+void joy_callback(const sensor_msgs::Joy::ConstPtr& joy_msg) {
+
+  std::cout << "ha" <<std::endl;
+  bod_height_ros += joy_msg->axes[1]*0.01;
+  if (bod_height_ros >= bod_height_ros_max) {
+    bod_height_ros = bod_height_ros_max;  
+  }
+  if (bod_height_ros <= bod_height_ros_min) {
+    bod_height_ros = bod_height_ros_min;  
+  }
+  roll_ang = joy_msg->axes[3]*30/180.0*M_PI;
+  pitch_ang = joy_msg->axes[4]*30/180.0*M_PI;
+  yaw_ang = joy_msg->axes[0]*30/180.0*M_PI;
+  return;
+}
 
 int main(int argc, char **argv)
 {
@@ -20,6 +44,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "move_publisher");
     ros::NodeHandle nh;
     ros::Publisher move_publisher = nh.advertise<gazebo_msgs::ModelState>("/gazebo/set_model_state", 1000);
+    ros::Subscriber joy_stick_sub = nh.subscribe("/joy", 1000, joy_callback);
 
     gazebo_msgs::ModelState model_state_pub;
 
@@ -28,7 +53,7 @@ int main(int argc, char **argv)
     std::cout << "robot_name: " << robot_name << std::endl;
 
     model_state_pub.model_name = robot_name + "_gazebo";
-    ros::Rate loop_rate(1000);
+    ros::Rate loop_rate(500);
 
     if(def_frame == coord::WORLD)
     {
@@ -49,12 +74,15 @@ int main(int argc, char **argv)
         tf::Quaternion q;
         while(ros::ok())
         {
-            model_state_pub.pose.position.x = radius * sin(2*M_PI*(double)time_ms/period);
-            model_state_pub.pose.position.y = radius * cos(2*M_PI*(double)time_ms/period);
-            model_state_pub.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, 0, - 2*M_PI*(double)time_ms/period);
+            // model_state_pub.pose.position.x = radius * sin(2*M_PI*(double)time_ms/period);
+            // model_state_pub.pose.position.y = radius * cos(2*M_PI*(double)time_ms/period);
+            model_state_pub.pose.position.z = 0.5+bod_height_ros;
+            // model_state_pub.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, 0, - 2*M_PI*(double)time_ms/period);
+            model_state_pub.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(roll_ang, pitch_ang, yaw_ang);
 
             move_publisher.publish(model_state_pub);
             loop_rate.sleep();
+            ros::spinOnce();
             time_ms += 1;
         }
     }

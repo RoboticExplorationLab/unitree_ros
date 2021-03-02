@@ -12,7 +12,7 @@
     <gazebo>
         <plugin name="p3d" filename="libgazebo_ros_p3d.so">
         <alwaysOn>true</alwaysOn>
-        <updateRate>300.0</updateRate>
+        <updateRate>100.0</updateRate>
         <bodyName>base</bodyName>
         <topicName>body_pose_ground_truth</topicName>
         <frameName>world</frameName>
@@ -22,7 +22,7 @@
     </gazebo>
 
     <!-- Show the trajectory of trunk center. -->
-    <gazebo>
+    <!-- <gazebo>
         <plugin name="3dplot" filename="libLinkPlot3DPlugin.so">
             <frequency>10</frequency>
             <plot>
@@ -31,7 +31,7 @@
                 <material>Gazebo/Yellow</material>
             </plot>
         </plugin>
-    </gazebo>
+    </gazebo> -->
 
     <!-- Show the trajectory of foot. You can add another trajectory about another foot. -->
     <!-- <gazebo>
@@ -56,13 +56,13 @@
         <gravity>true</gravity>
         <sensor name="imu_sensor" type="imu">
             <always_on>true</always_on>
-            <update_rate>1000</update_rate>
+            <update_rate>100</update_rate>
             <visualize>true</visualize>
             <topic>__default_topic__</topic>
             <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
                 <topicName>trunk_imu</topicName>
                 <bodyName>imu_link</bodyName>
-                <updateRateHZ>1000.0</updateRateHZ>
+                <updateRateHZ>200.0</updateRateHZ>
                 <gaussianNoise>0.0</gaussianNoise>
                 <xyzOffset>0 0 0</xyzOffset>
                 <rpyOffset>0 0 0</rpyOffset>
